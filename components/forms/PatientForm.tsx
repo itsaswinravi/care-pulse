@@ -1,14 +1,21 @@
-import React from 'react'
+"use client";
+
+import React, { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod"
-import { Form,} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import { Form } from "@/components/ui/form";
+
+
+
+
+
 import CustomFormField from '../ui/CustomFormField';
-
-
+import SubmitButton from '../ui/SubmitButton';
+import { UserFormValidation } from '@/lib/validation';
+import { create } from 'domain';
+import { createuser } from "@/lib/actions/patient.actions";
 export enum FormFieldType {
     INPUT = "input",
     TEXTAREA = "textarea",
@@ -19,25 +26,33 @@ export enum FormFieldType {
     SKELETON = "skeleton",
   }
 
-const formSchema = z.object({
-    username: z.string().min(2, {
-        message: "Username must be at least 2 characters",
-    })
-})
+
 
   const PatientForm = () => {
+    const router = useRouter();
+    const [isLoading,setisLoading] = useState(false);
       
   
-    const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof UserFormValidation>>({
+      resolver: zodResolver(UserFormValidation),
       defaultValues: {
-       username: "",
+       name: "",
+       email: "",
+       phone: "",
       },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-console.log(values)
-    }
+   async function onSubmit({ name,email,phone}: z.infer<typeof UserFormValidation>) {
+setisLoading(true);  
+try{
+  const userData = { name,email,phone }
+
+  const user = await createuser(userData);
+  if(user) router.push(`/patients/${user.$id}/register`)
+} catch (error){
+  console.log(error);
+}
+ }
   
     return (
         <Form {...form}>
@@ -52,7 +67,7 @@ console.log(values)
           control={form.control}
           name="name"
           label="Full name"
-          placeholder="John Doe"
+          placeholder="bruce"
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
         />
@@ -62,7 +77,7 @@ console.log(values)
           control={form.control}
           name="email"
           label="Email"
-          placeholder="johndoe@gmail.com"
+          placeholder="bruce@gmail.com"
           iconSrc="/assets/icons/email.svg"
           iconAlt="email"
         />

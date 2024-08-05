@@ -14,8 +14,7 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from '../ui/CustomFormField';
 import SubmitButton from '../ui/SubmitButton';
 import { UserFormValidation } from '@/lib/validation';
-import { create } from 'domain';
-import { createuser } from "@/lib/actions/patient.actions";
+import { createUser } from "@/lib/actions/patient.actions";
 export enum FormFieldType {
     INPUT = "input",
     TEXTAREA = "textarea",
@@ -44,10 +43,11 @@ export enum FormFieldType {
 
    async function onSubmit({ name,email,phone}: z.infer<typeof UserFormValidation>) {
 setisLoading(true);  
+console.log("inside onsubmit")
 try{
   const userData = { name,email,phone }
 
-  const user = await createuser(userData);
+  const user = await createUser(userData);
   if(user) router.push(`/patients/${user.$id}/register`)
 } catch (error){
   console.log(error);

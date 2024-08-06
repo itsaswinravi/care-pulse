@@ -32,7 +32,7 @@ const RegisterForm = ({ user }: { user: User }) => {
       phone: "",
     },
   })
-  async function onSubmit({ name, email, phone }: z.infer<typeof PatientFormValidation>) {
+  async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
     console.log("inside onSubmit")
 
@@ -246,7 +246,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             control={form.control}
             name="familyMedicalHistory"
             label="Family medical history"
-            placeholder="Mother had brain cancer, Father had liver cancer"
+            placeholder="issues with blood pressure"
           />
           <CustomFormField
             fieldType={FormFieldType.TEXTAREA}

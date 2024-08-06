@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Control } from "react-hook-form"
-import { FormFieldType } from '../forms/PatientForm'
-  import Image from 'next/image'
+
+import Image from 'next/image'
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { E164Number } from "libphonenumber-js/core";
@@ -22,6 +22,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@radix-ui/react-select'
 import { Textarea } from './textarea'
 import { Checkbox } from './checkbox'
+import { FormFieldType } from '../forms/PatientForm'
 
 
 interface CustomProps {

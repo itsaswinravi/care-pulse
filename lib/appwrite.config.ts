@@ -6,7 +6,6 @@ export const {
 } = process.env;
 
 const client = new sdk.Client();
-console.log(ENDPOINT,'111111111111111111')
 client 
     .setEndpoint(process.env.NEXT_PUBLIC_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_PROJECT_ID!)

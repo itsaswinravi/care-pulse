@@ -11,7 +11,7 @@ import { Form } from "@/components/ui/form";
 
 
 
-import CustomFormField from '../ui/CustomFormField';
+import CustomFormField from './CustomFormField';
 import SubmitButton from '../ui/SubmitButton';
 import { UserFormValidation } from '@/lib/validation';
 import { createUser } from "@/lib/actions/patient.actions";

@@ -5,19 +5,20 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl } from "@/components/ui/form"
-import CustomFormField from "../ui/CustomFormField"
+import CustomFormField from "./CustomFormField"
 import SubmitButton from "../ui/SubmitButton"
 import { useState } from "react"
 import { PatientFormValidation, UserFormValidation } from "@/lib/validation"
 import { useRouter } from "next/navigation"
 import { createUser, registerPatient } from "@/lib/actions/patient.actions"
-import PatientForm, { FormFieldType } from "./PatientForm"
+import { FormFieldType } from "./PatientForm"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-import { Label } from "@radix-ui/react-label"
+import { Label } from "../ui/label"
 import { SelectItem } from "../ui/select"
 import Image from "next/image"
 import FileUploader from "../FileUploader"
-import { Doctors, IdentificationTypes, GenderOptions, PatientFormDefaultValues } from "@/constants"
+
+import { Doctors, GenderOptions, IdentificationTypes, PatientFormDefaultValues } from "@/constants"
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -37,26 +38,28 @@ const RegisterForm = ({ user }: { user: User }) => {
     console.log("inside onSubmit")
 
     let formData;
-    if(values.identificationDocument && values.identificationDocument.length > 0) {
-      const blobFile = new Blob([values.identificationDocument[0]], {
+    if (values.identificationDocument && values.identificationDocument.length > 0) {
+       const blobFile = new Blob([values.identificationDocument[0]],{
         type: values.identificationDocument[0].type,
-      })
-      formData = new FormData();
-      formData.append('blobFile', blobFile);
-      formData.append('fileName', values.identificationDocument[0].name)
+       })
+
+       formData = new FormData();
+       formData.append("blobFile", blobFile);
+       formData.append("filename", values.identificationDocument[0].name);
     }
+    
     try {
       const patientData = {
         ...values,
         userId: user.$id,
         birthDate: new Date(values.birthDate),
-        IdentificationDocument:formData,
+        identificationDocument: formData,
       }
-
-      // @ts-ignore
-     const patient = await registerPatient(patientData);
-     if(patient) router.push(`/patients/${user.$id}/new-appointment`)
-
+ 
+      //@ts-ignore
+      const patient = await registerPatient(patientData);
+      
+      if (patient) router.push(`/patients/${user.$id}/new-appointment`);
     } catch (error) {
       console.log(error);
     }
@@ -246,7 +249,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             control={form.control}
             name="familyMedicalHistory"
             label="Family medical history"
-            placeholder="issues with blood pressure"
+            placeholder="Mother had brain cancer, Father had liver cancer"
           />
           <CustomFormField
             fieldType={FormFieldType.TEXTAREA}
@@ -278,54 +281,49 @@ const RegisterForm = ({ user }: { user: User }) => {
         </CustomFormField>
 
         <CustomFormField
-            fieldType={FormFieldType.INPUT}
-            control={form.control}
-            name="identificationNumber"
-            label="Identification Number"
-            placeholder="123456789"
+          fieldType={FormFieldType.INPUT}
+          control={form.control}
+          name="identificationNumber"
+          label="Identification Number"
+          placeholder="123456789"
         />
-        
-          <CustomFormField
-            fieldType={FormFieldType.SKELETON}
-            control={form.control}
-            name="identificationDocument"
-            label="Scanned copy of identification document"
-            renderSkeleton={(field) => (
-              <FormControl>
-                <FileUploader files={field.value} onChange={field.onChange} />
-              </FormControl>
-              
-                
-            )}
-          />
 
-<section className="space-y-6">
+        <CustomFormField
+          fieldType={FormFieldType.SKELETON}
+          control={form.control}
+          name="identificationDocument"
+          label="Scanned copy of identification document"
+          renderSkeleton={(field) => (
+            <FormControl>
+              <FileUploader files={field.value} onChange={field.onChange} />
+            </FormControl>
+          )}
+        />
+
+        <section className="space-y-6">
           <div className="mb-9 space-y-1">
-            <h2 className="sub-header">consent and Privacy </h2>
+            <h2 className="sub-header">Consent and Privacy</h2>
           </div>
         </section>
-        <CustomFormField
-        fieldType={FormFieldType.CHECKBOX}
-        control={form.control}
-        name="treatmentConsent"
-        label="I consent to treatment"
+
+        <CustomFormField 
+          fieldType={FormFieldType.CHECKBOX} 
+          control={form.control}
+          name="treatmentConsent"
+          label="I consent to treatment"
         />
-
-<CustomFormField
-        fieldType={FormFieldType.CHECKBOX}
-        control={form.control}
-        name="disclosureConsent"
-        label="I consent to disclo"
+        <CustomFormField 
+          fieldType={FormFieldType.CHECKBOX} 
+          control={form.control}
+          name="disclosureConsent"
+          label="I consent to disclosure of information"
         />
-
-<CustomFormField
-        fieldType={FormFieldType.CHECKBOX}
-        control={form.control}
-        name="treatmentConsent"
-        label="I consent to treatment"
+        <CustomFormField 
+          fieldType={FormFieldType.CHECKBOX} 
+          control={form.control}
+          name="privacyConsent"
+          label="I consent to privacy policy"
         />
-
-
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>

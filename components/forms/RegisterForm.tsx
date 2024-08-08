@@ -48,15 +48,18 @@ const RegisterForm = ({ user }: { user: User }) => {
        formData.append("filename", values.identificationDocument[0].name);
     }
     
+    const path = window.location.pathname;
+    // Assuming the URL structure is /patients/[id]/register
+    const idFromPath = path.split('/patients/')[1]?.split('/')[0];
+    console.log(idFromPath);
     try {
       const patientData = {
         ...values,
-        userId: user.$id,
+        userId: idFromPath,
         birthDate: new Date(values.birthDate),
         identificationDocument: formData,
       }
- 
-      //@ts-ignore
+      // @ts-ignore
       const patient = await registerPatient(patientData);
       
       if (patient) router.push(`/patients/${idFromPath}/new-appointment`);
